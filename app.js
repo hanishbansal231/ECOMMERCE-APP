@@ -2,6 +2,8 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
+import errorMiddleware from './middlewares/errorMiddleware.js';
+import userRouter from './routers/userRouter.js';
 const app = express();
 
 
@@ -15,9 +17,10 @@ app.get('/',(req,res) => {
     })
 });
 
+app.use('/api/v1/auth',userRouter);
 
 app.all("*", (req,res) => {
     res.send('OOPS! Invalid Information');
 });
-
+app.use(errorMiddleware);
 export default app;
