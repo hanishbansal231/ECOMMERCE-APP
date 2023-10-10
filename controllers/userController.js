@@ -82,7 +82,12 @@ const login = async (req, res, next) => {
     }
 }
 
+const testController = () => {
+
+}
+
 export {
     userRegister,
-    login
+    login,
+    testController
 }
