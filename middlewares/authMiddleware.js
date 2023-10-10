@@ -8,8 +8,6 @@ const isLoggedIn = asyncHandler(async (req, res, next) => {
             req.body.token ||
             (req.headers.authorization && req.headers.authorization.replace('Bearer ', ''));
 
-        console.log(token);
-
         if (!token) {
             return next(new AppError('Token is not found', 403));
         }
