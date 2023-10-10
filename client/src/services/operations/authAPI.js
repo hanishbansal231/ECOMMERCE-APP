@@ -33,13 +33,13 @@ export function registerUser(data, navigate) {
     }
 }
 
-export function loginUser(data,navigate){
+export function loginUser(data, navigate) {
     return async (dispatch) => {
 
         const toastId = toast.loading('Loading...');
 
-        try{
-            const response = await apiConnector('POST',LOGIN_API,data);
+        try {
+            const response = await apiConnector('POST', LOGIN_API, data);
 
             if (!response?.data?.success) {
                 throw new Error(response.data.message);
@@ -48,17 +48,29 @@ export function loginUser(data,navigate){
             dispatch(setToken(response?.data?.user.token));
             dispatch(setData(response?.data?.user));
 
-            localStorage.setItem('token',JSON.stringify(response?.data?.user.token));
+            localStorage.setItem('token', JSON.stringify(response?.data?.user.token));
+            localStorage.setItem('data', JSON.stringify(response?.data?.user));
 
             toast.success("Login Successful");
             navigate("/");
 
-        }catch(error){
+        } catch (error) {
             console.log("LOGIN API ERROR............", error)
             toast.error("Login Failed")
             navigate("/login")
         }
-        
+
         toast.dismiss(toastId);
+    }
+}
+
+
+export function logout(navigate) {
+    return (dispatch) => {
+        dispatch(setToken(null));
+        dispatch(setData(null));
+        localStorage.removeItem('token');
+        localStorage.removeItem('data');
+        navigate('/');
     }
 }

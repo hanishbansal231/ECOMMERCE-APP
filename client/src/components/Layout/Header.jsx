@@ -51,7 +51,7 @@ function Header() {
                     }
                     {
                         token && (
-                            <div>
+                            <div className="flex justify-center items-center gap-5">
                                 <Link to={'/cart'}>
                                     <div className="relative">
                                         <span className="text-2xl font-semibold text-white hover:text-yellow-400 transition-all duration-300 ease-out">
