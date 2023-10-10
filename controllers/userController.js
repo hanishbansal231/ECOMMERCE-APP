@@ -10,7 +10,7 @@ const cookieOption = {
 const userRegister = async (req, res, next) => {
     try {
         const { name, email, password, address, phone } = req.body;
-        
+
         if (!name || !email || !password || !address || !phone) {
             return next(new AppError('All field are required', 403));
         }
@@ -26,7 +26,11 @@ const userRegister = async (req, res, next) => {
             email,
             password,
             address,
-            phone
+            phone,
+            image: {
+                public_id: email,
+                secure_url: `https://api.dicebear.com/5.x/initials/svg?seed=${name}`,
+            }
         });
 
         if (!user) {
@@ -71,9 +75,9 @@ const login = async (req, res, next) => {
         user.token = token;
         res.cookie('token', token, cookieOption);
 
-       return res.status(200).json({
+        return res.status(200).json({
             success: true,
-            message:'user login successfully...',
+            message: 'user login successfully...',
             user,
         });
 

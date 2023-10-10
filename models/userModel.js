@@ -36,8 +36,16 @@ const userSchema = new Schema({
         type: Number,
         default: 0,
     },
-    token:{
+    image: {
+        public_id:{
         type:String,
+       },
+       secure_url:{
+        type:String,
+       }
+    },
+    token: {
+        type: String,
     }
 }, { timestamps: true });
 
@@ -59,9 +67,9 @@ userSchema.methods = {
     },
     jwtToken: async function () {
         return jwt.sign({
-            id:this._id,
-            role:this.role,
-        },process.env.SECRET,{expiresIn:process.env.EXPIRE})
+            id: this._id,
+            role: this.role,
+        }, process.env.SECRET, { expiresIn: process.env.EXPIRE })
     }
 }
 
