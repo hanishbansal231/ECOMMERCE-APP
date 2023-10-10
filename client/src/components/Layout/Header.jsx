@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
 import { AiOutlineLogin, AiFillShopping } from 'react-icons/ai';
 import { FaCartShopping } from 'react-icons/fa6';
 import ProfileDropDown from "../Header/ProfileDropDown";
 function Header() {
-    const token = true;
+    const { token } = useSelector((state) => state.auth);
     return (
         <div className="bg-gray-700 h-[70px] shadow-[0_0_10px_black] p-5">
             <div className="flex items-center justify-between max-w-[1300px] m-auto">
@@ -15,7 +16,7 @@ function Header() {
                     </h2>
                 </div>
                 <div>
-                    <ul className="flex items-center gap-5 text-lg font-medium text-white">
+                    <ul className="flex items-center gap-5 text-lg font-medium text-white uppercase">
                         <li className="hover:text-yellow-300 transition-all duration-300 ease-in">
                             <Link to={'/'}>Home</Link>
                         </li>
