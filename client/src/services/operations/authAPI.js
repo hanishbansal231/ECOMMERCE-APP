@@ -64,7 +64,6 @@ export function loginUser(data, navigate) {
     }
 }
 
-
 export function logout(navigate) {
     return (dispatch) => {
         dispatch(setToken(null));

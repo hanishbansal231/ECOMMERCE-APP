@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { BiUserCircle } from 'react-icons/bi';
+import {BsFillBagCheckFill} from 'react-icons/bs';
 import { logout } from '../../services/operations/authAPI';
 import { useNavigate } from 'react-router-dom';
 function ProfileDropDown() {
@@ -33,6 +34,12 @@ function ProfileDropDown() {
                             <BiUserCircle className='text-2xl text-red-300' />
                             <span>
                                 Profile
+                            </span>
+                        </button>
+                        <button className='border-b border-red-200 text-lg w-full flex items-center gap-3 py-3 cursor-pointer'>
+                            <BsFillBagCheckFill className='text-2xl text-red-300' />
+                            <span>
+                                Order
                             </span>
                         </button>
                         <button onClick={handelLogout} className='border-b border-red-200 text-lg w-full flex items-center gap-3 py-3 cursor-pointer'>

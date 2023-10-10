@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { registerUser } from "../../services/operations/authAPI";
+import Layout from "../../components/Layout/Layout";
 function Register() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -31,13 +32,22 @@ function Register() {
 
         try {
             const res = await dispatch(registerUser(userData, navigate));
-            console.log(res);
+
+            setUserData({
+                name: '',
+                email: '',
+                address: '',
+                phone: '',
+                password: '',
+            });
+            
         } catch (e) {
             console.log(e.message);
         }
     }
     return (
-        <div className="min-h-[80vh] flex items-center justify-center">
+       <Layout>
+         <div className="min-h-[80vh] flex items-center justify-center">
             <form
                 onSubmit={onFormSubmit}
                 className="shadow-[0_0_10px_black] w-[35em] p-3 rounded my-4"
@@ -114,6 +124,7 @@ function Register() {
                 </div>
             </form>
         </div>
+       </Layout>
     );
 }
 

@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 const userSchema = new Schema({
     name: {
         type: String,
@@ -37,16 +38,19 @@ const userSchema = new Schema({
         default: 0,
     },
     image: {
-        public_id:{
-        type:String,
-       },
-       secure_url:{
-        type:String,
-       }
+        public_id: {
+            type: String,
+        },
+        secure_url: {
+            type: String,
+        }
     },
     token: {
         type: String,
-    }
+    },
+    resetPasswordToken: String,
+    resetPasswordExpiry: Date,
+
 }, { timestamps: true });
 
 
@@ -70,6 +74,17 @@ userSchema.methods = {
             id: this._id,
             role: this.role,
         }, process.env.SECRET, { expiresIn: process.env.EXPIRE })
+    },
+    generatePasswordResetToken: async function () {
+        const resetToken = crypto.randomBytes(20).toString('hex');
+
+        this.resetPasswordToken = crypto
+        .createHash('sha256')
+        .update(resetToken)
+        .digest('hex')
+
+        this.resetPasswordExpiry = Date.now() * 15 * 60 * 1000;
+        return resetToken;
     }
 }
 
