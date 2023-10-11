@@ -102,16 +102,15 @@ const resetPasswordToken = async (req, res, next) => {
         }
 
         const resetToken = await user.generatePasswordResetToken();
-        console.log(resetToken);
+
         await user.save();
-        console.log(resetToken);
-        const url = `http://localhost:3000/forgot-password/${resetToken}`
-        console.log(url);
+
+        const resetPasswordUrl = `http://localhost:3000/forgot-password/${resetToken}`
+
         const subject = 'Reset Password';
-        const message = `You can reset your password by clicking <a href=${url} target="_blank">Reset your password</a>\nIf the above link does not work for some reason then copy paste this link in new tab ${url}.\n If you have not requested this, kindly ignore.`;
+        const message = `You can reset your password by clicking <a href=${resetPasswordUrl} target="_blank">Reset your password</a>\nIf the above link does not work for some reason then copy paste this link in new tab ${resetPasswordUrl}.\n If you have not requested this, kindly ignore.`;
 
         try {
-            console.log('Starting');
             await sendEmail(email, subject, message);
             res.status(200).json({
                 success: true,
@@ -129,9 +128,62 @@ const resetPasswordToken = async (req, res, next) => {
     }
 }
 
+const forgotPassword = async (req, res, next) => {
+    try {
+        const { newPassword, confirmPassword, resetToken } = req.body;
+
+        // Check if newPassword, confirmPassword, and resetToken are present in the request
+        if (!newPassword || !confirmPassword || !resetToken) {
+            return next(new AppError('All fields are required', 403));
+        }
+
+        // Check if newPassword and confirmPassword match
+        if (newPassword !== confirmPassword) {
+            return next(new AppError('Password does not match, please try again...', 402));
+        }
+
+        // Hash the resetToken to match the stored value in the database
+        const resetPasswordToken = crypto
+            .createHash('sha256')
+            .update(resetToken)
+            .digest('hex');
+
+        // Find the user with the matching resetToken that hasn't expired
+        const user = await User.findOne({
+            resetPasswordToken:resetToken,
+            resetPasswordExpiry: { $gt: Date.now() },
+        });
+
+        // Log the user and resetToken for debugging
+        // console.log('User:', user);
+        // console.log('resetToken:', resetToken);
+        // console.log('resetPasswordToken:', resetPasswordToken);
+
+        // If no user is found, return an error
+        if (!user) {
+            return next(new AppError('Token is invalid or expired', 400));
+        }
+
+        // Update the user's password and reset token-related fields
+        user.password = newPassword;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpiry = undefined;
+
+        // Save the changes and send a success response
+        await user.save();
+        return res.status(200).json({
+            success: true,
+            message: 'Password Change Successful...',
+        });
+
+    } catch (e) {
+        return next(new AppError(e.message, 500));
+    }
+}
 
 export {
     userRegister,
     login,
-    resetPasswordToken
+    resetPasswordToken,
+    forgotPassword
 }

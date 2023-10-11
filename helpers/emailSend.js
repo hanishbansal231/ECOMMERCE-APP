@@ -4,7 +4,7 @@ const sendEmail = async (email, subject, message) => {
     const transport = createTransport({
         host: process.env.SMTP_HOST,
         auth: {
-            user: process.env.SMTP_USERNAME,
+            user: process.env.SMTP_FROM_EMAIL,
             pass: process.env.SMTP_PASSWORD
         }
     });
