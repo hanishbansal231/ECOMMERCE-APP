@@ -1,7 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/operations/authAPI";
 import Layout from "../../components/Layout/Layout";
 
@@ -67,6 +67,11 @@ function Login() {
                             onChange={handelUserInput}
                         />
                     </div>
+                    <Link to={'/reset-password'}>
+                        <p className="text-blue-700 font-mono p-1 cursor-pointer">
+                            Forgot Password
+                        </p>
+                    </Link>
                     <div className="p-1">
                         <button
                             type="submit"

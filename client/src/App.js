@@ -9,6 +9,8 @@ import Register from './pages/Auth/Register';
 import Login from './pages/Auth/Login';
 import Dashboard from './pages/User/Dashboard';
 import PrivateRoute from './pages/Auth/PrivateRoute';
+import ResetPassword from './pages/Auth/ResetPassword';
+import ForgotPassword from './pages/Auth/ForgotPassword';
 
 function App() {
   return (
@@ -21,6 +23,9 @@ function App() {
           <Route path='/policy' element={<Policy />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/reset-password' element={<ResetPassword />} />
+          <Route path='/reset-password' element={<ResetPassword />} />
+          <Route path='/forgot-password/:resetToken' element={<ForgotPassword />} />
 
             <Route 
             path='/dashboard' 

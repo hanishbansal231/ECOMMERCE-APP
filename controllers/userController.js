@@ -150,7 +150,7 @@ const forgotPassword = async (req, res, next) => {
 
         // Find the user with the matching resetToken that hasn't expired
         const user = await User.findOne({
-            resetPasswordToken:resetToken,
+            resetPasswordToken,
             resetPasswordExpiry: { $gt: Date.now() },
         });
 

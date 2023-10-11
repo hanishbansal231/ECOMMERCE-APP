@@ -6,7 +6,9 @@ import { toast } from 'react-hot-toast';
 
 const {
     REGISTER_API,
-    LOGIN_API
+    LOGIN_API,
+    RESET_PASSWORD_API,
+    FORGOT_PASSWORD_API
 } = AUTH_ENDPOINT;
 
 
@@ -71,5 +73,51 @@ export function logout(navigate) {
         localStorage.removeItem('token');
         localStorage.removeItem('data');
         navigate('/');
+    }
+}
+
+
+export function resetPassword(data, setEmailSend) {
+    return async (dispatch) => {
+
+        const toastId = toast.loading('Loading...');
+        try {
+            const response = await apiConnector('POST', RESET_PASSWORD_API, data);
+
+            if (!response?.data?.success) {
+                throw new Error(response.data.message);
+            }
+
+            toast.success("Reset Email Successful");
+            setEmailSend(true);
+
+        } catch (error) {
+            console.log("RESET API ERROR............", error)
+            toast.error("RESET Failed")
+        }
+
+        toast.dismiss(toastId);
+    }
+}
+
+export function forgotPassword(data, resetToken, navigate) {
+    return async (dispatch) => {
+
+        const toastId = toast.loading('Loading...');
+        try {
+            const response = await apiConnector('POST', FORGOT_PASSWORD_API, { ...data, resetToken });
+
+            if (!response?.data?.success) {
+                throw new Error(response.data.message);
+            }
+
+            toast.success("Reset Password Successful");
+            navigate('/login');
+        } catch (error) {
+            console.log("RESET API ERROR............", error)
+            toast.error("RESET Failed")
+        }
+
+        toast.dismiss(toastId);
     }
 }
