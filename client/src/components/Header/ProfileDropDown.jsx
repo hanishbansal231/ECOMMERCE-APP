@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
-import { BiUserCircle } from 'react-icons/bi';
+import { BiUserCircle ,BiSolidDashboard} from 'react-icons/bi';
 import {BsFillBagCheckFill} from 'react-icons/bs';
 import { logout } from '../../services/operations/authAPI';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +13,7 @@ function ProfileDropDown() {
     async function  handelLogout(){
         await dispatch(logout(navigate));
     }
+    
     return (
         <div className='relative'>
             <div 
@@ -40,6 +41,12 @@ function ProfileDropDown() {
                             <BsFillBagCheckFill className='text-2xl text-red-300' />
                             <span>
                                 Order
+                            </span>
+                        </button>
+                        <button onClick={() => navigate(`/dashboard/${data?.role === 1 ? 'admin' : 'user'}`)} className='border-b border-red-200 text-lg w-full flex items-center gap-3 py-3 cursor-pointer'>
+                            <BiSolidDashboard className='text-2xl text-red-300' />
+                            <span>
+                                Dashboard
                             </span>
                         </button>
                         <button onClick={handelLogout} className='border-b border-red-200 text-lg w-full flex items-center gap-3 py-3 cursor-pointer'>

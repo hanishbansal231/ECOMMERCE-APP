@@ -2,6 +2,8 @@ import sendEmail from "../helpers/emailSend.js";
 import AppError from "../helpers/error.helpers.js"
 import User from '../models/userModel.js';
 import crypto from 'crypto';
+import cloudinary from 'cloudinary';
+import fs from 'fs/promises';
 const cookieOption = {
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
@@ -181,9 +183,49 @@ const forgotPassword = async (req, res, next) => {
     }
 }
 
+const imageUpdate = async (req,res,next) => {
+    try{
+        const id = req.user.id;
+        console.log(id);
+        const user = await User.findById({_id:id});
+        if(!user){
+            return next(new AppError('User is not found...',403));
+        }
+
+        if(req.file){
+          try{
+           const result = await cloudinary.v2.uploader.upload(req.file.path,{
+                folder:'Ecommerce',
+            });
+
+            if(result){
+                user.image.secure_url = result.secure_url;
+                user.image.public_id = result.public_id;
+
+                fs.rm(`uploads/${req.file.filename}`)
+            }
+
+            await user.save();
+
+            return res.status(200).json({
+                success: true,
+                message:'upload Successfully...',
+                user
+            })
+            
+          }catch(e){
+            return next(new AppError(e.message,500));
+          }
+        }
+    }catch(e){
+        return next(new AppError(e.message,500));
+    }
+}
+
 export {
     userRegister,
     login,
     resetPasswordToken,
-    forgotPassword
+    forgotPassword,
+    imageUpdate
 }

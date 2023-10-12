@@ -8,7 +8,8 @@ const {
     REGISTER_API,
     LOGIN_API,
     RESET_PASSWORD_API,
-    FORGOT_PASSWORD_API
+    FORGOT_PASSWORD_API,
+    UPLOAD_IMAGE_API
 } = AUTH_ENDPOINT;
 
 
@@ -118,6 +119,35 @@ export function forgotPassword(data, resetToken, navigate) {
             toast.error("RESET Failed")
         }
 
+        toast.dismiss(toastId);
+    }
+}
+
+
+
+export function changeProfilePicture(data, token, navigate, setImageUpload) {
+    return async (dispatch) => {
+
+        const toastId = toast.loading('Loading...');
+        try {
+            setImageUpload(true);
+            const response = await apiConnector('POST', UPLOAD_IMAGE_API, data, {
+                Authorization: `Bearer ${token}`
+            });
+
+            if (!response?.data?.success) {
+                throw new Error(response.data.message);
+            }
+            console.log(response);
+            dispatch(setData(response?.data?.user));
+            localStorage.setItem('data', JSON.stringify(response?.data?.user));
+            navigate('/dashboard/admin/profile')
+            toast.success("Image Upload Successful");
+            setImageUpload(false);
+        } catch (error) {
+            console.log("UPLOAD IMAGE API ERROR............", error)
+            toast.error("UPLOAD IMAGE Failed")
+        }
         toast.dismiss(toastId);
     }
 }
