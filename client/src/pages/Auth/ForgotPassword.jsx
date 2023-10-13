@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Layout from "../../components/Layout/Layout";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { forgotPassword } from "../../services/operations/authAPI";
 
@@ -9,7 +9,7 @@ function ForgotPassword() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
-
+    const {loading} = useSelector((state) => state.auth);
     const [userDetail,setUserDetail] = useState({
         newPassword:'',
         confirmPassword:'',
@@ -33,43 +33,53 @@ function ForgotPassword() {
     return (
         <Layout>
             <div className="min-h-[80vh] flex items-center justify-center">
-                <form
-                onSubmit={onFormSubmit}
-                className="shadow-[0_0_10px_black] w-[35em] p-3 rounded my-4"
-                >
-                      <div className="flex flex-col gap-1 p-1">
-                        <label htmlFor="newPassword" className="text-lg font-semibold text-gray-600">New Password<sup className="text-red-400">*</sup></label>
-                        <input
-                            type="password"
-                            name="newPassword"
-                            id="newPassword"
-                            placeholder="Enter Your New Password"
-                            className="py-2 px-1 border border-gray-400 outline-none rounded"
-                            value={userDetail.newPassword}
-                            onChange={handelInput}
-                        />
-                    </div>
-                    <div className="flex flex-col gap-1 p-1">
-                        <label htmlFor="password" className="text-lg font-semibold text-gray-600">Confirm Password<sup className="text-red-400">*</sup></label>
-                        <input
-                            type="password"
-                            name="confirmPassword"
-                            id="confirmPassword"
-                            placeholder="Enter Your Comfirm Password"
-                            className="py-2 px-1 border border-gray-400 outline-none rounded"
-                            value={userDetail.confirmPassword}
-                            onChange={handelInput}
-                        />
-                    </div>
-                    <div className="p-1">
-                        <button
-                            type="submit"
-                            className="w-full bg-red-300 font-mono text-white rounded py-2 text-lg font-semibold hover:bg-red-400 transition-all duration-300 ease-out"
-                        >
-                            Reset Password
-                        </button>
-                    </div>
-                </form>
+              {
+                loading
+                ?
+                (
+                    <div className="shapes"></div>
+                )
+                :
+                (
+                    <form
+                    onSubmit={onFormSubmit}
+                    className="shadow-[0_0_10px_black] w-[35em] p-3 rounded my-4"
+                    >
+                          <div className="flex flex-col gap-1 p-1">
+                            <label htmlFor="newPassword" className="text-lg font-semibold text-gray-600">New Password<sup className="text-red-400">*</sup></label>
+                            <input
+                                type="password"
+                                name="newPassword"
+                                id="newPassword"
+                                placeholder="Enter Your New Password"
+                                className="py-2 px-1 border border-gray-400 outline-none rounded"
+                                value={userDetail.newPassword}
+                                onChange={handelInput}
+                            />
+                        </div>
+                        <div className="flex flex-col gap-1 p-1">
+                            <label htmlFor="password" className="text-lg font-semibold text-gray-600">Confirm Password<sup className="text-red-400">*</sup></label>
+                            <input
+                                type="password"
+                                name="confirmPassword"
+                                id="confirmPassword"
+                                placeholder="Enter Your Comfirm Password"
+                                className="py-2 px-1 border border-gray-400 outline-none rounded"
+                                value={userDetail.confirmPassword}
+                                onChange={handelInput}
+                            />
+                        </div>
+                        <div className="p-1">
+                            <button
+                                type="submit"
+                                className="w-full bg-red-300 font-mono text-white rounded py-2 text-lg font-semibold hover:bg-red-400 transition-all duration-300 ease-out"
+                            >
+                                Reset Password
+                            </button>
+                        </div>
+                    </form>
+                )
+              }
             </div>
         </Layout>
     )

@@ -183,42 +183,128 @@ const forgotPassword = async (req, res, next) => {
     }
 }
 
-const imageUpdate = async (req,res,next) => {
-    try{
+const imageUpdate = async (req, res, next) => {
+    try {
         const id = req.user.id;
         console.log(id);
+        const user = await User.findById({ _id: id });
+        if (!user) {
+            return next(new AppError('User is not found...', 403));
+        }
+
+        if (req.file) {
+            try {
+                const result = await cloudinary.v2.uploader.upload(req.file.path, {
+                    folder: 'Ecommerce',
+                });
+
+                if (result) {
+                    user.image.secure_url = result.secure_url;
+                    user.image.public_id = result.public_id;
+
+                    fs.rm(`uploads/${req.file.filename}`)
+                }
+
+                await user.save();
+
+                return res.status(200).json({
+                    success: true,
+                    message: 'upload Successfully...',
+                    user
+                })
+
+            } catch (e) {
+                return next(new AppError(e.message, 500));
+            }
+        }
+    } catch (e) {
+        return next(new AppError(e.message, 500));
+    }
+}
+
+const updateProfile = async (req, res, next) => {
+    try {
+        const id = req.user.id;
+
+        const existUser = await User.findById({ _id: id });
+
+        if (!existUser) {
+            return next(new AppError('User are not found...', 403));
+        }
+
+        const user = await User.findByIdAndUpdate(
+            { _id: id },
+            {
+                $set: req.body,
+            }, { new: true });
+
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Updated Successfully...',
+            user
+        });
+
+    } catch (e) {
+        return next(new AppError(e.message, 500));
+    }
+}
+
+const changePassword = async (req, res, next) => {
+    try {
+        const id = req.user.id;
+        const { oldPassword, newPassword } = req.body;
+
+        if (!oldPassword || !newPassword) {
+            return next(new AppError('All field are mandatory...', 403));
+        }
+
+        const user = await User.findById({ _id: id });
+
+        if (!user) {
+            return next(new AppError('User is not found...', 402));
+        }
+
+        if(!user.comparePassword(oldPassword)){
+            return next(new AppError('Password is not match...',402));
+        }
+
+        user.password = newPassword;
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Password Change Successfully...',
+        });
+
+    } catch (e) {
+        return next(new AppError(e.message, 500));
+    }
+}
+
+const deleteAccount = async (req,res,next) => {
+    try{
+        const id = req.user.id;
+
         const user = await User.findById({_id:id});
+
         if(!user){
             return next(new AppError('User is not found...',403));
         }
 
-        if(req.file){
-          try{
-           const result = await cloudinary.v2.uploader.upload(req.file.path,{
-                folder:'Ecommerce',
-            });
+        await cloudinary.v2.uploader.destroy(user.image.public_id);
 
-            if(result){
-                user.image.secure_url = result.secure_url;
-                user.image.public_id = result.public_id;
+        await User.findByIdAndDelete({_id:id});
 
-                fs.rm(`uploads/${req.file.filename}`)
-            }
+        return res.status(200).json({
+            success: true,
+            message: 'Deleted Successfully...',
+        });
 
-            await user.save();
 
-            return res.status(200).json({
-                success: true,
-                message:'upload Successfully...',
-                user
-            })
-            
-          }catch(e){
-            return next(new AppError(e.message,500));
-          }
-        }
     }catch(e){
-        return next(new AppError(e.message,500));
+        return next(new AppError(e.message, 500));
     }
 }
 
@@ -227,5 +313,8 @@ export {
     login,
     resetPasswordToken,
     forgotPassword,
-    imageUpdate
+    imageUpdate,
+    updateProfile,
+    changePassword,
+    deleteAccount
 }
