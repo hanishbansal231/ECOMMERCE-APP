@@ -14,6 +14,7 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import UserDashboard from './pages/User/UserDashboard';
 import AdminDetails from './pages/Admin/AdminDetails';
 import Setting from './pages/Admin/Setting';
+import CreateCategory from './pages/Admin/CreateCategory';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path='admin' element={<AdminDashboard />} >
             <Route path='profile'  element={<AdminDetails />} />
             <Route path='setting'  element={<Setting />} />
+            <Route path='create-category'  element={<CreateCategory />} />
           </Route>
         </Route>
         <Route

@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { registerUser } from "../../services/operations/authAPI";
 import Layout from "../../components/Layout/Layout";
-import { setLoading } from "../../Redux/Slice/authSlice";
 function Register() {
     const { loading } = useSelector((state) => state.auth);
     const navigate = useNavigate();
@@ -51,7 +50,7 @@ function Register() {
         <Layout>
             <div className="min-h-[80vh] flex items-center justify-center">
                 {
-                    setLoading
+                    loading
                         ?
                         (
                             <div className="shapes"></div>

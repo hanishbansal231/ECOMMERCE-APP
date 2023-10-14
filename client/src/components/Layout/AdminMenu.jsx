@@ -8,7 +8,7 @@ function AdminMenu() {
             <div className='flex flex-col'>
                 <h2 className='text-center pb-3 font-mono text-3xl mt-4 border-b'>Admin Panel</h2>
                 <div className='flex flex-col border-b'>
-                    <Link className='text-xl p-2 bg-red-400 text-white'>Create Category</Link>
+                    <Link to={'/dashboard/admin/create-category'} className='text-xl p-2 bg-red-400 text-white'>Create Category</Link>
                     <Link className='text-xl p-2'>Create Product</Link>
                     <Link className='text-xl p-2'>Profile</Link>
                 </div>
