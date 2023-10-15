@@ -195,7 +195,7 @@ const imageUpdate = async (req, res, next) => {
         if (req.file) {
             try {
                 const result = await cloudinary.v2.uploader.upload(req.file.path, {
-                    folder: 'Ecommerce',
+                    folder: process.env.FOLDER,
                 });
 
                 if (result) {

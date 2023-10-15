@@ -18,3 +18,10 @@ export const CATEGORY_ENDPOINT = {
     DELETE_CATEGORY_API: BASE_URl + '/category/delete-category',
     UPDATE_CATEGORY_API: BASE_URl + '/category/update-category'
 }
+
+export const PRODUCT_ENDPOINT = {
+    CREATE_PRODUCT_API: BASE_URl + '/product/create-product',
+    ALL_PRODUCT_API: BASE_URl + '/product/all-product',
+    DELETE_PRODUCT_API: BASE_URl + '/product/delete-product',
+    UPDATE_PRODUCT_API: BASE_URl + '/product/updated-product'
+}

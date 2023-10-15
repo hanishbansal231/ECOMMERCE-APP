@@ -1,5 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
+
 import './App.css';
+
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -15,8 +17,12 @@ import UserDashboard from './pages/User/UserDashboard';
 import AdminDetails from './pages/Admin/AdminDetails';
 import Setting from './pages/Admin/Setting';
 import CreateCategory from './pages/Admin/CreateCategory';
+import CreateProduct from './pages/Admin/CreateProduct';
+import Products from './pages/Admin/Products';
+import { useSelector } from 'react-redux';
 
 function App() {
+  const { edit } = useSelector((state) => state.product);
   return (
     <>
 
@@ -39,9 +45,11 @@ function App() {
             </PrivateRoute>
           } >
           <Route path='admin' element={<AdminDashboard />} >
-            <Route path='profile'  element={<AdminDetails />} />
-            <Route path='setting'  element={<Setting />} />
-            <Route path='create-category'  element={<CreateCategory />} />
+            <Route path='profile' element={<AdminDetails />} />
+            <Route path='setting' element={<Setting />} />
+            <Route path='create-category' element={<CreateCategory />} />
+            <Route path={edit ? 'edit-product' : 'create-product'} element={<CreateProduct />} />
+            <Route path='products' element={<Products />} />
           </Route>
         </Route>
         <Route

@@ -5,6 +5,7 @@ import cors from 'cors';
 import errorMiddleware from './middlewares/errorMiddleware.js';
 import userRouter from './routers/userRouter.js';
 import categoryRouter from './routers/categoryRoute.js';
+import productRouter from './routers/productRouter.js';
 const app = express();
 
 
@@ -20,6 +21,7 @@ app.get('/',(req,res) => {
 
 app.use('/api/v1/auth',userRouter);
 app.use('/api/v1/category',categoryRouter);
+app.use('/api/v1/product',productRouter);
 
 app.all("*", (req,res) => {
     res.send('OOPS! Invalid Information');
