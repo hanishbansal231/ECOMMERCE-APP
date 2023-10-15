@@ -7,7 +7,8 @@ const {
     CREATE_PRODUCT_API,
     ALL_PRODUCT_API,
     DELETE_PRODUCT_API,
-    UPDATE_PRODUCT_API
+    UPDATE_PRODUCT_API,
+    FILTER_PRODUCT_API
 } = PRODUCT_ENDPOINT
 
 export function createProduct(data, token, setLoading) {
@@ -77,7 +78,7 @@ export function deleteProduct(id, token) {
 }
 
 
-export function updateProduct(id,data,token) {
+export function updateProduct(id, data, token) {
     return async (dispatch) => {
         const toastId = toast.loading('Loading...');
         let result = [];
@@ -95,6 +96,24 @@ export function updateProduct(id,data,token) {
             toast.error("UPDATED-PRODUCT Failed")
         }
         toast.dismiss(toastId);
+        return result;
+    }
+}
+
+export function filterProducts(checked,radio) {
+    return async (dispatch) => {
+        let result = [];
+        try {
+            const response = await apiConnector('POST',FILTER_PRODUCT_API, {checked,radio});
+            
+            if (!response?.data?.success) {
+                throw new Error(response.data.message);
+            }
+            result = response?.data?.products;
+        } catch (error) {
+            console.log("FILTER-PRODUCT API ERROR............", error)
+            toast.error("FILTER-PRODUCT Failed")
+        }
         return result;
     }
 }

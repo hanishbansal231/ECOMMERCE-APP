@@ -17,7 +17,7 @@ function AdminMenu() {
                         }
                     </Link>
                     <Link to={'/dashboard/admin/products'} className='text-xl p-2'>Product</Link>
-                    <Link className='text-xl p-2'>Profile</Link>
+                    <Link to={'/dashboard/admin/profile'} className='text-xl p-2'>Profile</Link>
                 </div>
                 <div onClick={() => navigate('/dashboard/admin/setting')}>
                 <Link className='text-xl p-2 flex items-center gap-2'>

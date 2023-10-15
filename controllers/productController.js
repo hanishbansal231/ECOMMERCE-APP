@@ -80,64 +80,64 @@ const allProducts = async (req, res, next) => {
     }
 }
 
-const deleteProduct = async (req,res,next) => {
-    try{
-        const {id} = req.params;
+const deleteProduct = async (req, res, next) => {
+    try {
+        const { id } = req.params;
 
-        if(!id){
-            return next(new AppError('Id is not found...',402));
+        if (!id) {
+            return next(new AppError('Id is not found...', 402));
         }
 
-        const product = await Product.findById({_id:id});
+        const product = await Product.findById({ _id: id });
 
-        if(!product){
-            return next(new AppError('product is not found...',403));
+        if (!product) {
+            return next(new AppError('product is not found...', 403));
         }
 
         await cloudinary.v2.uploader.destroy(product.photo.public_id);
-        await Product.findByIdAndDelete({_id:id});
+        await Product.findByIdAndDelete({ _id: id });
 
         return res.status(200).json({
             success: true,
             message: 'Deleted Successfully...',
         });
 
-    }catch(e){
+    } catch (e) {
         return next(new AppError(e.message, 500));
     }
 }
 
-const updateProduct = async (req,res,next) => {
-    try{
-        const {id} = req.params;
+const updateProduct = async (req, res, next) => {
+    try {
+        const { id } = req.params;
 
-        if(!id){
-            return next(new AppError('Id is not found...',402));
+        if (!id) {
+            return next(new AppError('Id is not found...', 402));
         }
 
-        const product = await Product.findById({_id:id});
+        const product = await Product.findById({ _id: id });
 
-        if(!product){
-            return next(new AppError('product is not found...',403));
+        if (!product) {
+            return next(new AppError('product is not found...', 403));
         }
 
-        const updateProduct = await Product.findByIdAndUpdate({_id:id},{
+        const updateProduct = await Product.findByIdAndUpdate({ _id: id }, {
             $set: req.body,
-        },{new: true});
+        }, { new: true });
 
-        if(req.file){
-            try{
-                const result = await cloudinary.v2.uploader.upload(req.file.path,{
+        if (req.file) {
+            try {
+                const result = await cloudinary.v2.uploader.upload(req.file.path, {
                     folder: process.env.FOLDER,
                 });
 
-                if(result){
+                if (result) {
                     updateProduct.photo.public_id = result.public_id;
                     updateProduct.photo.secure_url = result.secure_url;
 
                     fs.rm(`uploads/${req.file.filname}`);
                 }
-            }catch(e){
+            } catch (e) {
                 return next(new AppError(e.message, 500));
             }
         }
@@ -151,14 +151,58 @@ const updateProduct = async (req,res,next) => {
         });
 
 
-    }catch(e){
+    } catch (e) {
         return next(new AppError(e.message, 500));
     }
 }
+
+
+const filterProduct = async (req, res, next) => {
+    try {
+        const { checked, radio } = req.body;
+        console.log(radio);
+
+        let args = {};
+
+        if (checked.length > 0) {
+            args.category = checked;
+        }
+
+        if (radio.length) {
+            const priceRange = radio[0].split(','); // Split the string into an array
+            if (priceRange.length === 2) {
+                const minPrice = parseFloat(priceRange[0]);
+                const maxPrice = parseFloat(priceRange[1]);
+                
+                if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+                    args.price = { $gte: minPrice, $lte: maxPrice };
+                } else {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Invalid price range format',
+                    });
+                }
+            }
+        }
+
+        const products = await Product.find(args);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Filter Successfully...',
+            products,
+        });
+
+    } catch (e) {
+        return next(new AppError(e.message, 500));
+    }
+};
+
 
 export {
     createProduct,
     allProducts,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    filterProduct
 }

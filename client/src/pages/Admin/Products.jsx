@@ -29,6 +29,7 @@ function Products() {
   useEffect(() => {
     fetchProduct();
   }, []);
+  
   return (
     <div className='max-w-[1220px] m-auto my-5'>
       <h2 className='text-3xl font-mono text-center'>
