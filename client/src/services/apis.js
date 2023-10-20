@@ -24,5 +24,7 @@ export const PRODUCT_ENDPOINT = {
     ALL_PRODUCT_API: BASE_URl + '/product/all-product',
     DELETE_PRODUCT_API: BASE_URl + '/product/delete-product',
     UPDATE_PRODUCT_API: BASE_URl + '/product/updated-product',
-    FILTER_PRODUCT_API: BASE_URl + '/product/filter-product'
+    FILTER_PRODUCT_API: BASE_URl + '/product/filter-product',
+    TOTAL_PRODUCT_API: BASE_URl + '/product/count-product',
+    LIST_PRODUCT_API: BASE_URl + '/product/list-product'
 }

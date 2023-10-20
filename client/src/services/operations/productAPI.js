@@ -8,7 +8,9 @@ const {
     ALL_PRODUCT_API,
     DELETE_PRODUCT_API,
     UPDATE_PRODUCT_API,
-    FILTER_PRODUCT_API
+    FILTER_PRODUCT_API,
+    TOTAL_PRODUCT_API,
+    LIST_PRODUCT_API
 } = PRODUCT_ENDPOINT
 
 export function createProduct(data, token, setLoading) {
@@ -100,12 +102,12 @@ export function updateProduct(id, data, token) {
     }
 }
 
-export function filterProducts(checked,radio) {
+export function filterProducts(checked, radio) {
     return async (dispatch) => {
         let result = [];
         try {
-            const response = await apiConnector('POST',FILTER_PRODUCT_API, {checked,radio});
-            
+            const response = await apiConnector('POST', FILTER_PRODUCT_API, { checked, radio });
+
             if (!response?.data?.success) {
                 throw new Error(response.data.message);
             }
@@ -114,6 +116,47 @@ export function filterProducts(checked,radio) {
             console.log("FILTER-PRODUCT API ERROR............", error)
             toast.error("FILTER-PRODUCT Failed")
         }
+        return result;
+    }
+}
+
+
+export function totalProduct() {
+    return async (dispatch) => {
+        const toastId = toast.loading('Loading...');
+        let result = [];
+        try {
+            const response = await apiConnector("GET", TOTAL_PRODUCT_API);
+            // console.log(response);
+            if (!response?.data?.success) {
+                throw new Error(response.data.message);
+            }
+            result = response?.data?.total;
+        } catch (error) {
+            console.log("LIST-PRODUCT API ERROR............", error)
+            toast.error("LIST-PRODUCT Failed")
+        }
+        toast.dismiss(toastId);
+        return result;
+    }
+}
+
+export function listProduct(page) {
+    return async (dispatch) => {
+        const toastId = toast.loading('Loading...');
+        let result = [];
+        try {
+            const response = await apiConnector("GET", `${LIST_PRODUCT_API}/${page}`);
+            // console.log(response);
+            if (!response?.data?.success) {
+                throw new Error(response.data.message);
+            }
+            result = response?.data?.list;
+        } catch (error) {
+            console.log("LIST-PRODUCT API ERROR............", error)
+            toast.error("LIST-PRODUCT Failed")
+        }
+        toast.dismiss(toastId);
         return result;
     }
 }

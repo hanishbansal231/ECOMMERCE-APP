@@ -1,20 +1,29 @@
 import { useCallback, useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
-import { allProduct, filterProducts } from "../services/operations/productAPI";
+import { filterProducts, listProduct, totalProduct } from "../services/operations/productAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { allCategory } from "../services/operations/categoryAPI";
 import { Prices } from "../components/prices";
-
+import { AiOutlineReload } from "react-icons/ai";
 function Home() {
     const { token } = useSelector((state) => state.auth);
     const [productList, setProductList] = useState([]);
     const [categorys, setCategorys] = useState([]);
     const [checked, setChecked] = useState([])
     const [radio, setRadio] = useState([]);
+    const [page, setPage] = useState(1);
+    const [total, setTotal] = useState(0);
+    const [loading, setLoading] = useState(false);
+    // console.log(page);
+    // console.log(productList.length);
+    // console.log(productList);
+    // console.log(total);
     const dispatch = useDispatch();
-
     async function fetchProduct() {
-        const res = await dispatch(allProduct(token));
+        // const res = await dispatch(allProduct(token));
+        setLoading(true);
+        const res = await dispatch(listProduct(page));
+        setLoading(false);
         setProductList(res);
     }
 
@@ -23,9 +32,16 @@ function Home() {
         setProductList(res);
     }
 
+    async function totalCount() {
+        const res = await dispatch(totalProduct());
+        setTotal(res);
+    }
+    useEffect(() => {
+        totalCount();
+    }, []);
     useEffect(() => {
         if (!checked.length || !radio.length) fetchProduct();
-    }, [checked.length, radio.length]);
+    }, [checked.length, radio.length, page]);
 
     useEffect(() => {
         if (checked.length || radio.length) handelFilter();
@@ -40,7 +56,7 @@ function Home() {
         fetchCategory();
     }, [fetchCategory]);
 
-    function handelRadio(value){
+    function handelRadio(value) {
         let result = [value];
         // result.push(value);
         setRadio(result);
@@ -103,14 +119,14 @@ function Home() {
                             </form>
                         </div>
                         <div className="flex justify-center my-5">
-                            <button onClick={() => window.location.reload()}  className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Reset Filter</button>
+                            <button onClick={() => window.location.reload()} className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Reset Filter</button>
                         </div>
 
                     </div>
                 </div>
                 <div className="max-w-[1000px] m-auto">
                     <h2 className="text-center my-5 font-semibold  text-5xl font-mono">All Products</h2>
-                    <div className='flex items-center justify-between flex-wrap my-5'>
+                    <div className='flex items-center justify-center gap-4 flex-wrap my-5'>
                         {
                             productList && (
                                 productList.map((item) => (
@@ -125,6 +141,20 @@ function Home() {
                                         </div>
                                     </div>
                                 ))
+                            )
+                        }
+                    </div>
+                    <div className="flex justify-center mb-4">
+                        {productList && productList.length < total && productList.length !== 0 &&
+                            (
+                                <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={(e) => {
+                                    e.preventDefault();
+                                    setPage((prev) => prev + 1);
+                                }}>
+                                    {
+                                        loading ? (<div className="flex items-center gap-1">Loading<div className="custom-loader"></div></div>) : (<div className="flex items-center justify-center gap-1">Load More <AiOutlineReload /></div>)
+                                    }
+                                </button>
                             )
                         }
                     </div>

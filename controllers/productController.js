@@ -198,11 +198,52 @@ const filterProduct = async (req, res, next) => {
     }
 };
 
+const productCount = async (req,res,next) => {
+    try{
+        // const total = await Product.find({}).estimatedDocumentCount();
+        const total = await Product.estimatedDocumentCount();
+        // console.log(total);
+       return res.status(200).json({
+            success: true,
+            message:'Total Count...',
+            total,
+        });
+
+    }catch(e){
+        return next(new AppError(e.message, 500));
+    }
+}
+
+const productList = async (req,res,next) => {
+    try{
+        const pageLimit = 6;
+        const page = req.params.page ? parseInt(req.params.page) : 1;
+        console.log(typeof page);
+        // console.log((page - 1) * pageLimit); // show pages
+        const skipCount = (page - 1) * pageLimit;
+        const list = await Product.find({})
+        .skip(skipCount)
+        .limit(pageLimit)
+        .sort({createdAt: -1});
+
+        // console.log(list);
+        return res.status(200).json({
+            success: true,
+            message:'Product List...',
+            list
+        });
+
+    }catch(e){
+        return next(new AppError(e.message, 500));
+    }
+}
 
 export {
     createProduct,
     allProducts,
     deleteProduct,
     updateProduct,
-    filterProduct
+    filterProduct,
+    productCount,
+    productList
 }
