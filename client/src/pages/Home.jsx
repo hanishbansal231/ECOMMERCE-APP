@@ -5,7 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { allCategory } from "../services/operations/categoryAPI";
 import { Prices } from "../components/prices";
 import { AiOutlineReload } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 function Home() {
+    const navigate = useNavigate();
     const { token } = useSelector((state) => state.auth);
     const [productList, setProductList] = useState([]);
     const [categorys, setCategorys] = useState([]);
@@ -130,7 +132,7 @@ function Home() {
                         {
                             productList && (
                                 productList.map((item) => (
-                                    <div className="border rounded my-3" key={item?._id}>
+                                    <div onClick={() => navigate(`/product/${item._id}`,{state:{...item}})} className="cursor-pointer border rounded my-3" key={item?._id}>
                                         <div className="">
                                             <img src={item?.photo?.secure_url} alt={item.name} className='w-[300px] h-[250px] border' />
                                             <div className='p-5'>

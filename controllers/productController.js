@@ -160,7 +160,7 @@ const updateProduct = async (req, res, next) => {
 const filterProduct = async (req, res, next) => {
     try {
         const { checked, radio } = req.body;
-        console.log(radio);
+        // console.log(radio);
 
         let args = {};
 
@@ -224,7 +224,9 @@ const productList = async (req, res, next) => {
         const list = await Product.find({})
             .skip(skipCount)
             .limit(pageLimit)
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .populate('category')
+            .exec();
 
         // console.log(list);
         return res.status(200).json({
@@ -258,10 +260,31 @@ const searchProduct = async (req, res, next) => {
         });
         return res.status(200).json({
             success: true,
-            message:'Search Product...',
+            message: 'Search Product...',
             searchProduct
         });
 
+    } catch (e) {
+        return next(new AppError(e.message, 500));
+    }
+}
+
+const relatedProduct = async (req, res, next) => {
+    try {
+        const { cid, pid } = req.params;
+        if (!cid || !pid) {
+            return next(new AppError('Id not found...', 403));
+        }
+        const similarProduct = await Product.find({
+            category: cid,
+            _id: { $ne: pid }
+        }).limit(3).sort({ createdAt: -1 }).populate('category').exec();
+        console.log(similarProduct);
+        return res.status(200).json({
+            success: true,
+            message: 'Find Related Product...',
+            similarProduct,
+        });
     } catch (e) {
         return next(new AppError(e.message, 500));
     }
@@ -275,5 +298,6 @@ export {
     filterProduct,
     productCount,
     productList,
-    searchProduct
+    searchProduct,
+    relatedProduct
 }

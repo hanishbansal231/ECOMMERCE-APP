@@ -28,4 +28,5 @@ export const PRODUCT_ENDPOINT = {
     TOTAL_PRODUCT_API: BASE_URl + '/product/count-product',
     LIST_PRODUCT_API: BASE_URl + '/product/list-product',
     SEARCH_PRODUCT_API: BASE_URl + '/product/search-product',
+    RELATED_PRODUCT_API: BASE_URl + '/product/related-product',
 }

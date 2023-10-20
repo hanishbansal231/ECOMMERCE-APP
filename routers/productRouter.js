@@ -1,6 +1,6 @@
 import { Router } from "express";
 import asyncHandler from "../middlewares/asyncHandler.js";
-import { allProducts, createProduct, deleteProduct, filterProduct, productCount, productList, searchProduct, updateProduct } from "../controllers/productController.js";
+import { allProducts, createProduct, deleteProduct, filterProduct, productCount, productList, relatedProduct, searchProduct, updateProduct } from "../controllers/productController.js";
 import isLoggedIn from "../middlewares/authMiddleware.js";
 import upload from "../middlewares/multerMiddleware.js";
 
@@ -14,5 +14,6 @@ route.post('/filter-product', asyncHandler(filterProduct));
 route.get('/count-product', asyncHandler(productCount));
 route.get('/list-product/:page', asyncHandler(productList));
 route.get('/search-product/:keyword', asyncHandler(searchProduct));
+route.get('/related-product/:pid/:cid', asyncHandler(relatedProduct));
 
 export default route;

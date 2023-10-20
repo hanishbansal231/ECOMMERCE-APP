@@ -21,6 +21,7 @@ import CreateProduct from './pages/Admin/CreateProduct';
 import Products from './pages/Admin/Products';
 import { useSelector } from 'react-redux';
 import Search from './pages/Search';
+import PageDetail from './pages/PageDetail';
 
 function App() {
   const { edit } = useSelector((state) => state.product);
@@ -29,6 +30,7 @@ function App() {
 
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/product/:id' element={<PageDetail />} />
         <Route path='/search' element={<Search />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
