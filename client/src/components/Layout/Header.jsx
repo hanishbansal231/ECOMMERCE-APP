@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { AiOutlineLogin, AiFillShopping } from 'react-icons/ai';
 import { FaCartShopping } from 'react-icons/fa6';
 import ProfileDropDown from "../Header/ProfileDropDown";
+import SearchInput from "../Header/SearchInput";
 function Header() {
     const { token } = useSelector((state) => state.auth);
     return (
@@ -17,6 +18,9 @@ function Header() {
                 </div>
                 <div>
                     <ul className="flex items-center gap-5 text-lg font-medium text-white uppercase">
+                        <li>
+                            <SearchInput />
+                        </li>
                         <li className="hover:text-yellow-300 transition-all duration-300 ease-in">
                             <Link to={'/'}>Home</Link>
                         </li>

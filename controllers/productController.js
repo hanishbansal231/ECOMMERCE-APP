@@ -173,7 +173,7 @@ const filterProduct = async (req, res, next) => {
             if (priceRange.length === 2) {
                 const minPrice = parseFloat(priceRange[0]);
                 const maxPrice = parseFloat(priceRange[1]);
-                
+
                 if (!isNaN(minPrice) && !isNaN(maxPrice)) {
                     args.price = { $gte: minPrice, $lte: maxPrice };
                 } else {
@@ -198,42 +198,71 @@ const filterProduct = async (req, res, next) => {
     }
 };
 
-const productCount = async (req,res,next) => {
-    try{
+const productCount = async (req, res, next) => {
+    try {
         // const total = await Product.find({}).estimatedDocumentCount();
         const total = await Product.estimatedDocumentCount();
         // console.log(total);
-       return res.status(200).json({
+        return res.status(200).json({
             success: true,
-            message:'Total Count...',
+            message: 'Total Count...',
             total,
         });
 
-    }catch(e){
+    } catch (e) {
         return next(new AppError(e.message, 500));
     }
 }
 
-const productList = async (req,res,next) => {
-    try{
+const productList = async (req, res, next) => {
+    try {
         const pageLimit = 6;
         const page = req.params.page ? parseInt(req.params.page) : 1;
         console.log(typeof page);
         // console.log((page - 1) * pageLimit); // show pages
         const skipCount = (page - 1) * pageLimit;
         const list = await Product.find({})
-        .skip(skipCount)
-        .limit(pageLimit)
-        .sort({createdAt: -1});
+            .skip(skipCount)
+            .limit(pageLimit)
+            .sort({ createdAt: -1 });
 
         // console.log(list);
         return res.status(200).json({
             success: true,
-            message:'Product List...',
+            message: 'Product List...',
             list
         });
 
-    }catch(e){
+    } catch (e) {
+        return next(new AppError(e.message, 500));
+    }
+}
+
+const searchProduct = async (req, res, next) => {
+    try {
+        const { keyword } = req.params;
+
+        if (!keyword) {
+            return next(new AppError('Keyword not found...', 403));
+        }
+
+        const searchProduct = await Product.find({
+            $or: [
+                {
+                    name: { $regex: keyword, $options: 'i' }
+                },
+                {
+                    description: { $regex: keyword, $options: 'i' },
+                },
+            ]
+        });
+        return res.status(200).json({
+            success: true,
+            message:'Search Product...',
+            searchProduct
+        });
+
+    } catch (e) {
         return next(new AppError(e.message, 500));
     }
 }
@@ -245,5 +274,6 @@ export {
     updateProduct,
     filterProduct,
     productCount,
-    productList
+    productList,
+    searchProduct
 }

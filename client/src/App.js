@@ -20,6 +20,7 @@ import CreateCategory from './pages/Admin/CreateCategory';
 import CreateProduct from './pages/Admin/CreateProduct';
 import Products from './pages/Admin/Products';
 import { useSelector } from 'react-redux';
+import Search from './pages/Search';
 
 function App() {
   const { edit } = useSelector((state) => state.product);
@@ -28,6 +29,7 @@ function App() {
 
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/search' element={<Search />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/policy' element={<Policy />} />
