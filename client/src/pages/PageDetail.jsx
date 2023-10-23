@@ -14,6 +14,7 @@ function PageDetail() {
         console.log(res);
         setProductList(res);
     }
+    console.log(productList);
     useEffect(() => {
         fetchProduct();
     }, []);
@@ -35,27 +36,31 @@ function PageDetail() {
                         </div>
                     </div>
                 </div>
-                <div className="max-w-[1000px] m-auto">
-                    <h2 className="text-center my-5 font-semibold  text-5xl font-mono">Similar Products</h2>
-                    <div className='flex items-center justify-center gap-4 flex-wrap my-5'>
-                        {
-                            productList && (
-                                productList.map((item) => (
-                                    <div onClick={() => navigate(`/product/${item._id}`, { state: { ...item } })} className="cursor-pointer border rounded my-3" key={item?._id}>
-                                        <div className="">
-                                            <img src={item?.photo?.secure_url} alt={item.name} className='w-[300px] h-[250px] border' />
-                                            <div className='p-5'>
-                                                <h3 className='capitalize text-lg font-semibold'>{item?.name}</h3>
-                                                <p className='capitalize text-md'>{item?.description}</p>
-                                                <p className='capitalize text-md'>{item?.price}</p>
+                {
+                    productList.length !== 0 && (
+                        <div className="max-w-[1000px] m-auto">
+                            <h2 className="text-center my-5 font-semibold  text-5xl font-mono">Similar Products</h2>
+                            <div className='flex items-center justify-center gap-4 flex-wrap my-5'>
+                                {
+                                    productList && (
+                                        productList.map((item) => (
+                                            <div className="cursor-pointer border rounded my-3" key={item?._id}>
+                                                <div onClick={() => navigate(`/product/${item._id}`,{state:{...item}})} className="">
+                                                    <img src={item?.photo?.secure_url} alt={item.name} className='w-[300px] h-[250px] border' />
+                                                    <div className='p-5'>
+                                                        <h3 className='capitalize text-lg font-semibold'>{item?.name}</h3>
+                                                        <p className='capitalize text-md'>{item?.description}</p>
+                                                        <p className='capitalize text-md'>{item?.price}</p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                ))
-                            )
-                        }
-                    </div>
-                </div>
+                                        ))
+                                    )
+                                }
+                            </div>
+                        </div>
+                    )
+                }
             </div>
         </Layout>
     )

@@ -279,7 +279,7 @@ const relatedProduct = async (req, res, next) => {
             category: cid,
             _id: { $ne: pid }
         }).limit(3).sort({ createdAt: -1 }).populate('category').exec();
-        console.log(similarProduct);
+        // console.log(similarProduct);
         return res.status(200).json({
             success: true,
             message: 'Find Related Product...',

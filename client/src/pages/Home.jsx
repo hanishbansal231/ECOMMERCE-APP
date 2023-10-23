@@ -6,20 +6,17 @@ import { allCategory } from "../services/operations/categoryAPI";
 import { Prices } from "../components/prices";
 import { AiOutlineReload } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { useCategory } from "../components/hook/useCategory";
+import { setCartData } from "../Redux/Slice/cartSlice";
 function Home() {
     const navigate = useNavigate();
-    const { token } = useSelector((state) => state.auth);
     const [productList, setProductList] = useState([]);
-    const [categorys, setCategorys] = useState([]);
+    const [categorys, setCategorys] = useCategory();
     const [checked, setChecked] = useState([])
     const [radio, setRadio] = useState([]);
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
-    // console.log(page);
-    // console.log(productList.length);
-    // console.log(productList);
-    // console.log(total);
     const dispatch = useDispatch();
     async function fetchProduct() {
         // const res = await dispatch(allProduct(token));
@@ -48,15 +45,6 @@ function Home() {
     useEffect(() => {
         if (checked.length || radio.length) handelFilter();
     }, [checked, radio]);
-
-    const fetchCategory = useCallback(async () => {
-        const res = await dispatch(allCategory(token));
-        setCategorys(res);
-    }, [dispatch, token, setCategorys])
-
-    useEffect(() => {
-        fetchCategory();
-    }, [fetchCategory]);
 
     function handelRadio(value) {
         let result = [value];
@@ -132,13 +120,24 @@ function Home() {
                         {
                             productList && (
                                 productList.map((item) => (
-                                    <div onClick={() => navigate(`/product/${item._id}`,{state:{...item}})} className="cursor-pointer border rounded my-3" key={item?._id}>
+                                    <div className="cursor-pointer border rounded my-3" key={item?._id}>
                                         <div className="">
                                             <img src={item?.photo?.secure_url} alt={item.name} className='w-[300px] h-[250px] border' />
                                             <div className='p-5'>
                                                 <h3 className='capitalize text-lg font-semibold'>{item?.name}</h3>
                                                 <p className='capitalize text-md'>{item?.description}</p>
                                                 <p className='capitalize text-md'>{item?.price}</p>
+                                                <div className="mt-3">
+                                                    <button onClick={() => {
+                                                        dispatch(setCartData(item));
+                                                        navigate('/cart');
+                                                    }} className="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded">
+                                                        Add To Cart
+                                                    </button>
+                                                    <button onClick={() => navigate(`/product/${item._id}`, { state: { ...item } })} className="bg-blue-500 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded">
+                                                        More Info
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

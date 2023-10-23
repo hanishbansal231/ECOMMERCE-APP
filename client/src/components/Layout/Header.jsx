@@ -6,6 +6,7 @@ import ProfileDropDown from "../Header/ProfileDropDown";
 import SearchInput from "../Header/SearchInput";
 function Header() {
     const { token } = useSelector((state) => state.auth);
+    const { totalItem } = useSelector((state) => state.cart);
     return (
         <div className="bg-gray-700 h-[70px] shadow-[0_0_10px_black] p-5">
             <div className="flex items-center justify-between max-w-[1300px] m-auto">
@@ -62,7 +63,7 @@ function Header() {
                                             <FaCartShopping />
                                         </span>
                                         <span className="flex text-sm items-center justify-center rounded-full text-center text-black absolute top-[-6px] right-[-8px] bg-yellow-400 h-4 w-4">
-                                            0
+                                            {totalItem}
                                         </span>
                                     </div>
                                 </Link>

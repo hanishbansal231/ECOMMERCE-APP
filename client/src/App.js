@@ -22,6 +22,7 @@ import Products from './pages/Admin/Products';
 import { useSelector } from 'react-redux';
 import Search from './pages/Search';
 import PageDetail from './pages/PageDetail';
+import Cart from './pages/Cart';
 
 function App() {
   const { edit } = useSelector((state) => state.product);
@@ -30,6 +31,7 @@ function App() {
 
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/cart' element={<PrivateRoute><Cart /></PrivateRoute>} />
         <Route path='/product/:id' element={<PageDetail />} />
         <Route path='/search' element={<Search />} />
         <Route path='/about' element={<About />} />
