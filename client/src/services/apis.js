@@ -30,3 +30,8 @@ export const PRODUCT_ENDPOINT = {
     SEARCH_PRODUCT_API: BASE_URl + '/product/search-product',
     RELATED_PRODUCT_API: BASE_URl + '/product/related-product',
 }
+
+export const PAYMENT_ENDPOINT = {
+    CREATE_PAYMENT_API: BASE_URl + '/payment/capturePayment',
+    VERIFY_PAYMENT_API: BASE_URl + '/payment/verifyPayment',
+}

@@ -1,23 +1,32 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import Layout from '../components/Layout/Layout';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { relatedProduct } from '../services/operations/productAPI';
+import { buyProduct } from '../services/operations/paymentAPI';
 
 function PageDetail() {
-    const { state } = useLocation();
-    const navigate = useNavigate();
-    const [productList, setProductList] = useState([]);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { state } = useLocation();
+    const { id } = useParams();
+    const { token, data } = useSelector((state) => state.auth);
+    const [productList, setProductList] = useState([]);
+
     async function fetchProduct() {
         const res = await dispatch(relatedProduct(state._id, state.category._id));
-        console.log(res);
         setProductList(res);
     }
-    console.log(productList);
+
     useEffect(() => {
         fetchProduct();
     }, []);
+
+    const handelBuyProduct = () => {
+        if (token) {
+            buyProduct(token, [id], data, navigate, dispatch);
+        }
+    }
 
     return (
         <Layout>
@@ -31,8 +40,10 @@ function PageDetail() {
                         <p className='text-xl'>Description: {state?.description}</p>
                         <p className='text-xl'>Price: {state?.price}</p>
                         <p className='text-xl'>Category: {state?.category?.name}</p>
-                        <div>
+                        <div className='flex items-center gap-3'>
                             <button className="bg-blue-500 my-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add To Cart</button>
+                            <button onClick={() => handelBuyProduct()} className='bg-red-500 text-white rounded py-2 px-4'>Buy Now</button>
+
                         </div>
                     </div>
                 </div>
@@ -45,12 +56,13 @@ function PageDetail() {
                                     productList && (
                                         productList.map((item) => (
                                             <div className="cursor-pointer border rounded my-3" key={item?._id}>
-                                                <div onClick={() => navigate(`/product/${item._id}`,{state:{...item}})} className="">
+                                                <div onClick={() => navigate(`/product/${item._id}`, { state: { ...item } })} className="">
                                                     <img src={item?.photo?.secure_url} alt={item.name} className='w-[300px] h-[250px] border' />
                                                     <div className='p-5'>
                                                         <h3 className='capitalize text-lg font-semibold'>{item?.name}</h3>
                                                         <p className='capitalize text-md'>{item?.description}</p>
                                                         <p className='capitalize text-md'>{item?.price}</p>
+
                                                     </div>
                                                 </div>
                                             </div>

@@ -2,11 +2,14 @@ import React from 'react'
 import Layout from '../components/Layout/Layout'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeCart } from '../Redux/Slice/cartSlice';
+import { buyProduct } from '../services/operations/paymentAPI';
+import { useNavigate } from 'react-router-dom';
 
 function Cart() {
     const dispatch = useDispatch();
     const { cartData, totalItem, amount } = useSelector((state) => state.cart);
-    const {token} = useSelector((state) => state.auth);
+    const { token } = useSelector((state) => state.auth);
+
     return (
         <Layout>
             <div className="min-h-[80vh] w-[1200px] m-auto">
@@ -14,11 +17,11 @@ function Cart() {
                     <h2 className='font-mono font-semibold text-3xl'>{`Hello Hanish`}</h2>
                     <p className='text-xl'>
                         {
-                            totalItem === 0 
-                            ? 
-                            (<span>{'Cart Empty'}</span>) 
-                            : 
-                            (<span>{`You Have ${totalItem} items in your cart ${token ? '' : 'please login to checkout !'}`}</span>)
+                            totalItem === 0
+                                ?
+                                (<span>{'Cart Empty'}</span>)
+                                :
+                                (<span>{`You Have ${totalItem} items in your cart ${token ? '' : 'please login to checkout !'}`}</span>)
                         }
                     </p>
                 </div>
